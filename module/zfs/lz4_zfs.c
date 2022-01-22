@@ -51,7 +51,8 @@ static int LZ4_compress64kCtx(void *ctx, const char *source, char *dest,
 int LZ4_uncompress_unknownOutputSize(const char *source, char *dest,
     int isize, int maxOutputSize);
 
-static kmem_cache_t *lz4_cache;
+static void *lz4_alloc(int flags);
+static void lz4_free(void *ctx);
 
 static size_t
 zfs_lz4_compress_buf(void *s_start, void *d_start, size_t s_len,
@@ -846,8 +847,7 @@ real_LZ4_compress(const char *source, char *dest, int isize, int osize)
 	void *ctx;
 	int result;
 
-	ASSERT(lz4_cache != NULL);
-	ctx = kmem_cache_alloc(lz4_cache, KM_SLEEP);
+	ctx = lz4_alloc(KM_SLEEP);
 
 	/*
 	 * out of kernel memory, gently fall through - this will disable
@@ -863,10 +863,29 @@ real_LZ4_compress(const char *source, char *dest, int isize, int osize)
 	else
 		result = LZ4_compressCtx(ctx, source, dest, isize, osize);
 
-	kmem_cache_free(lz4_cache, ctx);
+	lz4_free(ctx);
 	return (result);
 }
 
+#ifdef __FreeBSD__
+/*
+ * FreeBSD has 4, 8 and 16 KB malloc zones which can be used here.
+ * Should struct refTables get resized this may need to be revisited, hence
+ * compiler-time asserts.
+ */
+_Static_assert(sizeof(struct refTables) <= 16384,
+    "refTables too big for malloc");
+_Static_assert((sizeof(struct refTables) % 4096) == 0,
+    "refTables not a multiple of page size");
+#else
+#define ZFS_LZ4_USE_CACHE
+#endif
+
+#ifdef ZFS_LZ4_USE_CACHE
+static kmem_cache_t *lz4_cache;
+#endif
+
+#ifdef ZFS_LZ4_USE_CACHE
 void
 lz4_init(void)
 {
@@ -883,3 +902,39 @@ lz4_fini(void)
 		lz4_cache = NULL;
 	}
 }
+
+static void *
+lz4_alloc(int flags)
+{
+	ASSERT(lz4_cache != NULL);
+	return (kmem_cache_alloc(lz4_cache, flags));
+}
+ 
+static void
+lz4_free(void *ctx)
+{
+	kmem_cache_free(lz4_cache, ctx);
+}
+#else
+void
+lz4_init(void)
+{
+}
+
+void
+lz4_fini(void)
+{
+}
+
+static void *
+lz4_alloc(int flags)
+{
+	return (kmem_alloc(sizeof (struct refTables), flags));
+}
+
+static void
+lz4_free(void *ctx)
+{
+	kmem_free(ctx, sizeof (struct refTables));
+}
+#endif
