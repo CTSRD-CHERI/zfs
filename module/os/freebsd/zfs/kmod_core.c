@@ -128,12 +128,12 @@ zfsdev_ioctl(struct cdev *dev, ulong_t zcmd, caddr_t arg, int flag,
 	zfs_cmd_legacy_t *zcl;
 #endif
 	int rc, error;
-	void *uaddr;
+	void * __capability uaddr;
 
 	len = IOCPARM_LEN(zcmd);
 	vecnum = zcmd & 0xff;
 	zp = (void *)arg;
-	uaddr = (void *)zp->zfs_cmd;
+	uaddr = (void * __capability)zp->zfs_cmd;
 	error = 0;
 #ifdef ZFS_LEGACY_SUPPORT
 	zcl = NULL;
