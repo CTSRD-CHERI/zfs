@@ -281,7 +281,7 @@ static int zfs_check_clearable(const char *dataset, nvlist_t *props,
 static int zfs_fill_zplprops_root(uint64_t, nvlist_t *, nvlist_t *,
     boolean_t *);
 int zfs_set_prop_nvlist(const char *, zprop_source_t, nvlist_t *, nvlist_t *);
-static int get_nvlist(uint64_t nvl, uint64_t size, int iflag, nvlist_t **nvp);
+static int get_nvlist(uintptr_t nvl, uint64_t size, int iflag, nvlist_t **nvp);
 
 static void
 history_str_free(char *buf)
@@ -1264,7 +1264,7 @@ zfs_secpolicy_change_key(zfs_cmd_t *zc, nvlist_t *innvl, cred_t *cr)
  * Returns the nvlist as specified by the user in the zfs_cmd_t.
  */
 static int
-get_nvlist(uint64_t nvl, uint64_t size, int iflag, nvlist_t **nvp)
+get_nvlist(uintptr_t nvl, uint64_t size, int iflag, nvlist_t **nvp)
 {
 	char *packed;
 	int error;
