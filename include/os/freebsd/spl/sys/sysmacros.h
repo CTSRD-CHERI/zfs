@@ -371,6 +371,13 @@ highbit64(uint64_t i)
 #ifndef copyoutptr
 #define	copyoutptr	copyout
 #endif
+
+#ifndef __capability
+#define	__capability
+#endif
+#ifndef __cheri_fromcap
+#define	__cheri_fromcap
+#endif
 #endif
 
 #ifdef	__cplusplus
