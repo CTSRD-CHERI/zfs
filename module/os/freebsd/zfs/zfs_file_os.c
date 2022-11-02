@@ -71,9 +71,9 @@ zfs_file_open(const char *path, int flags, int mode, zfs_file_t **fpp)
 	fp->f_flag = flags & FMASK;
 
 #if __FreeBSD_version >= 1400043
-	NDINIT(&nd, LOOKUP, FOLLOW, UIO_SYSSPACE, path);
+	NDINIT(&nd, LOOKUP, FOLLOW, UIO_SYSSPACE, PTR2CAP(path));
 #else
-	NDINIT(&nd, LOOKUP, FOLLOW, UIO_SYSSPACE, path, td);
+	NDINIT(&nd, LOOKUP, FOLLOW, UIO_SYSSPACE, PTR2CAP(path), td);
 #endif
 	error = vn_open(&nd, &flags, mode, fp);
 	if (error != 0) {
@@ -354,6 +354,7 @@ zfs_file_unlink(const char *fnamep)
 	zfs_uio_seg_t seg = UIO_SYSSPACE;
 	int rc;
 
-	rc = kern_funlinkat(curthread, AT_FDCWD, fnamep, FD_NONE, seg, 0, 0);
+	rc = kern_funlinkat(curthread, AT_FDCWD, PTR2CAP(fnamep), FD_NONE,
+	    seg, 0, 0);
 	return (SET_ERROR(rc));
 }

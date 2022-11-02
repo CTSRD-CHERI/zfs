@@ -378,6 +378,9 @@ highbit64(uint64_t i)
 #ifndef __cheri_fromcap
 #define	__cheri_fromcap
 #endif
+#ifndef PTR2CAP
+#define	PTR2CAP(x)	(x)
+#endif
 #endif
 
 #ifdef	__cplusplus

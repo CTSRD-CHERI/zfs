@@ -220,6 +220,9 @@ makedev(unsigned int major, unsigned int minor)
 #ifndef __cheri_fromcap
 #define	__cheri_fromcap
 #endif
+#ifndef PTR2CAP
+#define	PTR2CAP(x)	(x)
+#endif
 #endif
 
 #endif  /* _SPL_SYSMACROS_H */

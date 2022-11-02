@@ -106,6 +106,9 @@
 #ifndef __cheri_fromcap
 #define	__cheri_fromcap
 #endif
+#ifndef PTR2CAP
+#define	PTR2CAP(x)	(x)
+#endif
 #endif
 
 #endif /* _LIBSPL_SYS_SYSMACROS_H */
