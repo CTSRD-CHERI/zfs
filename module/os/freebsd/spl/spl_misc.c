@@ -75,7 +75,7 @@ ddi_copyin(const void *from, void *to, size_t len, int flags)
 		return (0);
 	}
 
-	return (copyin(from, to, len));
+	return (copyinptr(from, to, len));
 }
 
 int
@@ -87,7 +87,7 @@ ddi_copyout(const void *from, void *to, size_t len, int flags)
 		return (0);
 	}
 
-	return (copyout(from, to, len));
+	return (copyoutptr(from, to, len));
 }
 
 void
