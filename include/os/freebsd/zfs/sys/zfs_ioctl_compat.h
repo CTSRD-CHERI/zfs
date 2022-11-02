@@ -44,7 +44,9 @@
  * For now, downstream consumers may choose to disable this code by
  * removing the following define.
  */
+#if !__has_feature(capabilities)
 #define	ZFS_LEGACY_SUPPORT
+#endif
 
 #ifdef	__cplusplus
 extern "C" {
