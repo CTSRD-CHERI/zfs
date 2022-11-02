@@ -506,9 +506,9 @@ typedef enum zfs_case {
  */
 typedef struct zfs_cmd {
 	char		zc_name[MAXPATHLEN];	/* name of pool or dataset */
-	uint64_t	zc_nvlist_src;		/* really (char *) */
+	uint64ptr_t	zc_nvlist_src;		/* really (char *) */
 	uint64_t	zc_nvlist_src_size;
-	uint64_t	zc_nvlist_dst;		/* really (char *) */
+	uint64ptr_t	zc_nvlist_dst;		/* really (char *) */
 	uint64_t	zc_nvlist_dst_size;
 	boolean_t	zc_nvlist_dst_filled;	/* put an nvlist in dst? */
 	int		zc_pad2;
@@ -517,11 +517,11 @@ typedef struct zfs_cmd {
 	 * The following members are for legacy ioctls which haven't been
 	 * converted to the new method.
 	 */
-	uint64_t	zc_history;		/* really (char *) */
+	uint64ptr_t	zc_history;		/* really (char *) */
 	char		zc_value[MAXPATHLEN * 2];
 	char		zc_string[MAXNAMELEN];
 	uint64_t	zc_guid;
-	uint64_t	zc_nvlist_conf;		/* really (char *) */
+	uint64ptr_t	zc_nvlist_conf;		/* really (char *) */
 	uint64_t	zc_nvlist_conf_size;
 	uint64_t	zc_cookie;
 	uint64_t	zc_objset_type;
@@ -568,7 +568,11 @@ typedef struct zfs_cmd {
  * platforms. We include them directly here, which means it won't trip if those
  * ever change, but if that happens we likely have other things to worry about.
  */
+#ifdef __CHERI_PURE_CAPABILITY__
+#define	_expected_zfs_cmd_size	((MAXPATHLEN*3)+MAXNAMELEN+1248)
+#else
 #define	_expected_zfs_cmd_size	((MAXPATHLEN*3)+MAXNAMELEN+1200)
+#endif
 _Static_assert(sizeof (zfs_cmd_t) == _expected_zfs_cmd_size,
 	"zfs_cmd_t has wrong size");
 #undef	_expected_zfs_cmd_size
