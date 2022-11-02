@@ -31,7 +31,7 @@
  * see: https://github.com/mcmilk/BLAKE3-tests/blob/master/contrib/simde.sh
  */
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) && !defined(__CHERI_PURE_CAPABILITY__)
 	.text
 	.section	.note.gnu.property,"a",@note
 	.p2align	3
