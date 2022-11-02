@@ -160,7 +160,7 @@ zfsdev_ioctl(struct cdev *dev, ulong_t zcmd, caddr_t arg, int flag,
 		zfs_cmd_legacy_to_ozfs(zcl, zc);
 	} else
 #endif
-	if (copyin(uaddr, zc, sizeof (zfs_cmd_t))) {
+	if (copyincap(uaddr, zc, sizeof (zfs_cmd_t))) {
 		error = SET_ERROR(EFAULT);
 		goto out;
 	}
@@ -172,7 +172,7 @@ zfsdev_ioctl(struct cdev *dev, ulong_t zcmd, caddr_t arg, int flag,
 	} else
 #endif
 	{
-		rc = copyout(zc, uaddr, sizeof (*zc));
+		rc = copyoutcap(zc, uaddr, sizeof (*zc));
 	}
 	if (error == 0 && rc != 0)
 		error = SET_ERROR(EFAULT);
