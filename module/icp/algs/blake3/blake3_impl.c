@@ -30,7 +30,8 @@
 
 #include "blake3_impl.h"
 
-#if !defined(OMIT_SIMD) && (defined(__aarch64__) ||  \
+#if !defined(OMIT_SIMD) && \
+    ((defined(__aarch64__) && !defined(__CHERI_PURE_CAPABILITY__)) || \
 	(defined(__x86_64) && defined(HAVE_SSE2)) || \
     (defined(__PPC64__) && defined(__LITTLE_ENDIAN__)))
 #define USE_SIMD
