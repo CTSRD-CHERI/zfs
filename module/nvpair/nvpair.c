@@ -553,7 +553,7 @@ nvlist_init(nvlist_t *nvl, uint32_t nvflag, nvpriv_t *priv)
 {
 	nvl->nvl_version = NV_VERSION;
 	nvl->nvl_nvflag = nvflag & (NV_UNIQUE_NAME|NV_UNIQUE_NAME_TYPE);
-	nvl->nvl_priv = (uint64_t)(uintptr_t)priv;
+	nvl->nvl_priv = (uintptr_t)priv;
 	nvl->nvl_flag = 0;
 	nvl->nvl_pad = 0;
 }
