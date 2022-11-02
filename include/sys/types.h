@@ -32,3 +32,8 @@ typedef	unsigned long	uint64ptr_t;
 typedef	uintptr_t	__uintcap_t;
 #pragma GCC diagnostic pop
 #endif
+
+#ifndef _KUINT64CAP_T_DECLARED
+typedef uint64ptr_t		kuint64cap_t;
+#define _KUINT64CAP_T_DECLARED
+#endif
