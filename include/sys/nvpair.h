@@ -85,7 +85,7 @@ typedef struct nvpair {
 typedef struct nvlist {
 	int32_t		nvl_version;
 	uint32_t	nvl_nvflag;	/* persistent flags */
-	uint64_t	nvl_priv;	/* ptr to private data if not packed */
+	uint64ptr_t	nvl_priv;	/* ptr to private data if not packed */
 	uint32_t	nvl_flag;
 	int32_t		nvl_pad;	/* currently not used, for alignment */
 } nvlist_t;
