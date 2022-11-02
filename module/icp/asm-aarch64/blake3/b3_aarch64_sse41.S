@@ -31,7 +31,7 @@
  * see: https://github.com/mcmilk/BLAKE3-tests/blob/master/contrib/simde.sh
  */
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) && !defined(__CHERI_PURE_CAPABILITY__)
 
 /* make gcc <= 9 happy */
 #if !defined(LD_VERSION) || LD_VERSION >= 233010000
