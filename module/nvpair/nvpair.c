@@ -56,6 +56,10 @@
 
 #define	skip_whitespace(p)	while ((*(p) == ' ') || (*(p) == '\t')) (p)++
 
+#ifdef __CHERI_PURE_CAPABILITY__
+#define NVPAIR_OVER_ALLOCATE_DECODE
+#endif
+
 /*
  * nvpair.c - Provides kernel & userland interfaces for manipulating
  *	name-value pairs.
