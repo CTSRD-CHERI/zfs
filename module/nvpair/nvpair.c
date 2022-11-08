@@ -810,8 +810,14 @@ i_validate_nvpair(nvpair_t *nvp)
 	 * verify string values and get the value size.
 	 */
 	size2 = i_get_value_size(type, NVP_VALUE(nvp), NVP_NELEM(nvp));
+	if (size2 < 0)
+		return (EFAULT);
 	size1 = nvp->nvp_size - NVP_VALOFF(nvp);
-	if (size2 < 0 || size1 != NV_ALIGN(size2))
+#ifdef NVPAIR_OVER_ALLOCATE_DECODE
+	if (size1 < NV_ALIGN(size2))
+#else
+	if (size1 != NV_ALIGN(size2))
+#endif
 		return (EFAULT);
 
 	return (0);
@@ -3653,6 +3659,15 @@ nvs_xdr_nvpair(nvstream_t *nvs, nvpair_t *nvp, size_t *size)
 
 		if (*size > NVS_XDR_MAX_LEN(bytesrec.xc_num_avail))
 			return (EFAULT);
+#ifdef NVPAIR_OVER_ALLOCATE_DECODE
+		/*
+		 * Waste space to make sure we have enough room to
+		 * decode the nvlist.  We need to account for string
+		 * alignment and the increaed size of a number of
+		 * messages, but just doubling will do that for now...
+		 */
+		*size *= 2;
+#endif
 		break;
 	}
 
