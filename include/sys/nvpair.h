@@ -105,7 +105,11 @@ typedef struct nvlist {
 #define	NV_FLAG_NOENTOK		0x1
 
 /* convenience macros */
+#ifdef __CHERI_PURE_CAPABILITY__
+#define	NV_ALIGN(x)		(((ulong_t)(x) + 15ul) & ~15ul)
+#else
 #define	NV_ALIGN(x)		(((ulong_t)(x) + 7ul) & ~7ul)
+#endif
 #define	NV_ALIGN4(x)		(((x) + 3) & ~3)
 
 #define	NVP_SIZE(nvp)		((nvp)->nvp_size)
