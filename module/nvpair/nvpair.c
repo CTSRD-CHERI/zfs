@@ -3254,6 +3254,15 @@ nvs_xdr_nvp_##type(XDR *xdrs, void *ptr)	\
 	return (xdr_##type(xdrs, ptr));		\
 }
 
+#elif !defined(_KERNEL) && defined(__FreeBSD__) && defined(__CheriBSD_version)
+
+#define	NVS_BUILD_XDRPROC_T(type)				\
+static int							\
+nvs_xdr_nvp_##type(struct XDR *xdrs, void *ptr, unsigned int i __unused) \
+{								\
+	return (xdr_##type(xdrs, ptr));				\
+}
+
 #elif !defined(_KERNEL) && defined(XDR_CONTROL) /* tirpc */
 
 #define	NVS_BUILD_XDRPROC_T(type)		\
