@@ -167,6 +167,7 @@ atomic_dec_64_nv(volatile uint64_t *target)
 	return (atomic_add_64_nv(target, -1));
 }
 
+#if 0
 #ifdef __LP64__
 static __inline void *
 atomic_cas_ptr(volatile void *target, void *cmp,  void *newval)
@@ -182,6 +183,7 @@ atomic_cas_ptr(volatile void *target, void *cmp,  void *newval)
 	    (uint32_t)cmp, (uint32_t)newval));
 }
 #endif	/* __LP64__ */
+#endif
 
 #else /* _STANDALONE */
 /*
