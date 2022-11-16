@@ -6841,7 +6841,7 @@ print_holds(boolean_t scripted, int nwidth, int tagwidth, nvlist_t *nvl,
 			if (scripted) {
 				if (parsable) {
 					(void) printf("%s\t%s\t%ld\n", zname,
-					    tagname, time);
+					    tagname, (unsigned long)time);
 				} else {
 					(void) printf("%s\t%s\t%s\n", zname,
 					    tagname, tsbuf);
@@ -6850,7 +6850,7 @@ print_holds(boolean_t scripted, int nwidth, int tagwidth, nvlist_t *nvl,
 				if (parsable) {
 					(void) printf("%-*s  %-*s  %ld\n",
 					    nwidth, zname, tagwidth,
-					    tagname, time);
+					    tagname, (unsigned long)time);
 				} else {
 					(void) printf("%-*s  %-*s  %s\n",
 					    nwidth, zname, tagwidth,
