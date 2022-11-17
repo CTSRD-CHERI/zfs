@@ -245,8 +245,10 @@ chksum_benchmark(void)
 
 	chksum_stat_t *cs;
 	int cbid = 0;
+#ifndef __CHERI_PURE_CAPABILITY__
 	uint64_t max = 0;
 	uint32_t id, id_save;
+#endif
 
 	/* space for the benchmark times */
 	chksum_stat_cnt = 4;
@@ -290,6 +292,8 @@ chksum_benchmark(void)
 	cs->impl = "generic";
 	chksum_benchit(cs);
 
+#ifndef __CHERI_PURE_CAPABILITY__
+	/* XXX: hangs during module load on a purecap kernel */
 	/* blake3 */
 	id_save = blake3_impl_getid();
 	for (id = 0; id < blake3_impl_getcnt(); id++) {
@@ -309,6 +313,7 @@ chksum_benchmark(void)
 
 	/* restore initial value */
 	blake3_impl_setid(id_save);
+#endif
 }
 
 void
