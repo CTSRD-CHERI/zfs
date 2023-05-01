@@ -31,10 +31,13 @@
 
 #include "blake3_impl.h"
 
-#if defined(__aarch64__) || \
+#if !defined(OMIT_SIMD) && (defined(__aarch64__) ||  \
 	(defined(__x86_64) && defined(HAVE_SSE2)) || \
-	(defined(__PPC64__) && defined(__LITTLE_ENDIAN__))
+    (defined(__PPC64__) && defined(__LITTLE_ENDIAN__)))
+#define USE_SIMD
+#endif
 
+#ifdef USE_SIMD
 extern void ASMABI zfs_blake3_compress_in_place_sse2(uint32_t cv[8],
     const uint8_t block[BLAKE3_BLOCK_LEN], uint8_t block_len,
     uint64_t counter, uint8_t flags);
@@ -97,9 +100,7 @@ const blake3_ops_t blake3_sse2_impl = {
 };
 #endif
 
-#if defined(__aarch64__) || \
-	(defined(__x86_64) && defined(HAVE_SSE2)) || \
-	(defined(__PPC64__) && defined(__LITTLE_ENDIAN__))
+#ifdef USE_SIMD
 
 extern void ASMABI zfs_blake3_compress_in_place_sse41(uint32_t cv[8],
     const uint8_t block[BLAKE3_BLOCK_LEN], uint8_t block_len,
@@ -258,6 +259,7 @@ extern const blake3_ops_t blake3_generic_impl;
 
 static const blake3_ops_t *const blake3_impls[] = {
 	&blake3_generic_impl,
+#ifdef USE_SIMD
 #if defined(__aarch64__) || \
 	(defined(__x86_64) && defined(HAVE_SSE2)) || \
 	(defined(__PPC64__) && defined(__LITTLE_ENDIAN__))
@@ -273,6 +275,7 @@ static const blake3_ops_t *const blake3_impls[] = {
 #endif
 #if defined(__x86_64) && defined(HAVE_AVX512F) && defined(HAVE_AVX512VL)
 	&blake3_avx512_impl,
+#endif
 #endif
 };
 
