@@ -88,7 +88,8 @@ const sha512_ops_t sha512_avx2_impl = {
 };
 #endif
 
-#elif defined(__aarch64__) || defined(__arm__)
+#elif (defined(__aarch64__) && !defined(__CHERI_PURE_CAPABILITY__)) || \
+    defined(__arm__)
 extern void zfs_sha512_block_armv7(uint64_t s[8], const void *, size_t);
 const sha512_ops_t sha512_armv7_impl = {
 	.is_supported = sha2_is_supported,
@@ -160,7 +161,8 @@ static const sha512_ops_t *const sha512_impls[] = {
 #if defined(__x86_64) && defined(HAVE_AVX2)
 	&sha512_avx2_impl,
 #endif
-#if defined(__aarch64__) || defined(__arm__)
+#if (defined(__aarch64__) && !defined(__CHERI_PURE_CAPABILITY__)) || \
+    defined(__arm__)
 	&sha512_armv7_impl,
 #if defined(__aarch64__)
 	&sha512_armv8_impl,
