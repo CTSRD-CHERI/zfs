@@ -23,10 +23,10 @@
  * Copyright (c) 2022 Tino Reichardt <milky-zfs@mcmilk.de>
  */
 
+#include <sys/simd.h>
 #include <sys/zfs_context.h>
 #include <sys/zfs_impl.h>
 #include <sys/sha2.h>
-#include <sys/simd.h>
 
 #include <sha2/sha2_impl.h>
 #include <sys/asm_linkage.h>
