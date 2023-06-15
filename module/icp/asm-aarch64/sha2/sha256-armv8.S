@@ -19,7 +19,7 @@
  * - modified assembly to fit into OpenZFS
  */
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) && !defined(__CHERI_PURE_CAPABILITY__)
 
 .text
 
