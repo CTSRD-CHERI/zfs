@@ -159,7 +159,11 @@ static void *
 explicit_memset(void *s, int c, size_t n)
 {
 	memset(s, c, n);
+#ifdef __CHERI_PURE_CAPABILITY__
+	__asm__ __volatile__("" :: "C"(s) : "memory");
+#else
 	__asm__ __volatile__("" :: "r"(s) : "memory");
+#endif
 	return (s);
 }
 
