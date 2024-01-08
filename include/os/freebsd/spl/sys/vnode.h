@@ -66,6 +66,7 @@ enum symfollow { NO_FOLLOW = NOFOLLOW };
 #include <sys/syscallsubr.h>
 #include <sys/vm.h>
 #include <vm/vm_object.h>
+#include <vm/vnode_pager.h>
 
 typedef	struct vop_vector	vnodeops_t;
 #define	VOP_FID		VOP_VPTOFH
@@ -95,10 +96,12 @@ static __inline void
 vn_flush_cached_data(vnode_t *vp, boolean_t sync)
 {
 	if (vm_object_mightbedirty(vp->v_object)) {
-		int flags = sync ? OBJPC_SYNC : 0;
-		zfs_vmobject_wlock(vp->v_object);
-		vm_object_page_clean(vp->v_object, 0, 0, flags);
-		zfs_vmobject_wunlock(vp->v_object);
+		vn_lock(vp, LK_SHARED | LK_RETRY);
+		if (sync)
+			vnode_pager_clean_sync(vp);
+		else
+			vnode_pager_clean_async(vp);
+		VOP_UNLOCK(vp);
 	}
 }
 
