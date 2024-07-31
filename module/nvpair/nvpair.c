@@ -56,7 +56,7 @@
 
 #define	skip_whitespace(p)	while ((*(p) == ' ') || (*(p) == '\t')) (p)++
 
-#ifdef __CHERI_PURE_CAPABILITY__
+#if defined(__CHERI__) || defined(__CHERI_HYBRID__)
 #define NVPAIR_OVER_ALLOCATE_DECODE
 #endif
 
