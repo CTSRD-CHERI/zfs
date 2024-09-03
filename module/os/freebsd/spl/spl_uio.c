@@ -45,6 +45,15 @@
 #include <sys/vnode.h>
 #include <sys/zfs_znode.h>
 
+/* XXX: should be an __FreeBSD_version check once API is upstream. */
+#ifndef UIO_EXT_IOVEC
+void
+freeuio(struct uio *uio)
+{
+	free(uio, M_IOV);
+}
+#endif
+
 int
 zfs_uiomove(void *cp, size_t n, zfs_uio_rw_t dir, zfs_uio_t *uio)
 {
