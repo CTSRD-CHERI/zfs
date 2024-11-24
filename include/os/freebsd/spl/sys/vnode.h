@@ -92,6 +92,7 @@ vn_is_readonly(vnode_t *vp)
 	((vp)->v_object != NULL && \
 	(vp)->v_object->resident_page_count > 0)
 
+#ifndef IN_BASE
 static __inline void
 vn_flush_cached_data(vnode_t *vp, boolean_t sync)
 {
@@ -104,6 +105,7 @@ vn_flush_cached_data(vnode_t *vp, boolean_t sync)
 		VOP_UNLOCK(vp);
 	}
 }
+#endif
 
 #define	vn_exists(vp)		do { } while (0)
 #define	vn_invalid(vp)		do { } while (0)
