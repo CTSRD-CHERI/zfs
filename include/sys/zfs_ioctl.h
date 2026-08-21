@@ -569,7 +569,12 @@ typedef struct zfs_cmd {
  * platforms. We include them directly here, which means it won't trip if those
  * ever change, but if that happens we likely have other things to worry about.
  */
+#if defined(__CHERI_PURE_CAPABILITY__) || \
+	(defined(_KERNEL) && (defined(__CHERI__) || defined(__CHERI_HYBRID__)))
+#define	_expected_zfs_cmd_size	((MAXPATHLEN*3)+MAXNAMELEN+1248)
+#else
 #define	_expected_zfs_cmd_size	((MAXPATHLEN*3)+MAXNAMELEN+1200)
+#endif
 _Static_assert(sizeof (zfs_cmd_t) == _expected_zfs_cmd_size,
 	"zfs_cmd_t has wrong size");
 #undef	_expected_zfs_cmd_size
